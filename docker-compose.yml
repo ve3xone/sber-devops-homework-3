@@ -1,0 +1,32 @@
+﻿services:
+  server:
+    build: ./server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    networks:
+      - app-network
+
+  client:
+    build: ./client
+    depends_on:
+      - server
+    volumes:
+      - ./data:/app/data
+    networks:
+      - app-network
+    command: 
+      - sh
+      - -c
+      - |
+        echo "Ждем когда сервер запустится..."
+        while ! wget -q --spider http://server:8000/file; do
+          sleep 2
+        done
+        echo "Сервер готов! Запускаем клиент..."
+        python client.py
+
+networks:
+  app-network:
+    driver: bridge
