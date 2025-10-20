@@ -12,8 +12,6 @@
     build: ./client
     depends_on:
       - server
-    volumes:
-      - ./data:/app/data
     networks:
       - app-network
     command: 
